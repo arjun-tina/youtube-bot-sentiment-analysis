@@ -24,3 +24,21 @@ response = request.execute()
 comments = []
 for item in response['items']:
     comments.append(item['snippet']['topLevelComment']['snippet']['textDisplay'])
+
+#function to clean comments
+def clean_comment(comment):
+    return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", comment).split())
+
+#function to append comment sentiments to csv file
+def append_list_to_csv(comments, filename):
+    file_exists = os.path.isfile(filename)
+    with open(filename, 'a', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        if not file_exists:
+            writer.writerow(['Comment', 'Polarity', 'Subjectivity', 'Channel'])  # write header only if the file is newly created
+        for comment in comments:
+            text = clean_comment(comment.text)
+            analysis = TextBlob(text)
+            polarity = analysis.polarity
+            subjectivity = analysis.subjectivity
+            writer.writerow([text, polarity, subjectivity, channel])
