@@ -42,3 +42,7 @@ def append_list_to_csv(comments, filename):
             polarity = analysis.polarity
             subjectivity = analysis.subjectivity
             writer.writerow([text, polarity, subjectivity, channel])
+    print("Done!")
+
+filename = "insert csv file name here "
+append_list_to_csv(comments, filename)
